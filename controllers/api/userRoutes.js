@@ -1,5 +1,5 @@
 const router = require('express').Router();
-const { Post, Comment, User } = require('../../models');
+const { User } = require('../../models');
 const sequelize = require ('../../config/connection.js');
 
 // route to sign up

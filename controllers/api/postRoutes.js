@@ -47,13 +47,13 @@ router.get("/:id", withAuth, async (req, res) => {
 //create a post
 router.post("/", withAuth, async (req, res) => {
   try {
-    const postData = await Post.create({
+    const newPost = await Post.create({
       title: req.body.title,
       body: req.body.body,
       user_id: req.session.user_id,
     });
 
-    res.status(200).json(postData);
+    res.status(200).json(newPost);
   } catch (err) {
     res.status(500).json(err);
   }
@@ -61,34 +61,36 @@ router.post("/", withAuth, async (req, res) => {
 
 // delete a post
 router.delete("/:id", withAuth, async (req, res) => {
-    try {
-        const postData = await Post.destroy({
-            where: {
-                id: req.params.id,
-            },
-        });
-        res.status(200).json(postData);
-    } catch (err) {
-        res.status(500).json;
-    }
+  try {
+    const postData = await Post.destroy({
+      where: {
+        id: req.params.id,
+      },
+    });
+    res.status(200).json(postData);
+  } catch (err) {
+    res.status(500).json;
+  }
 });
 
 // update a post
 router.put("/:id", withAuth, async (req, res) => {
-    try {
-        const postData = await Post.update( {
-            title: req.body.title,
-            body: req.body.body,
+  try {
+    const postData = await Post.update(
+      {
+        title: req.body.title,
+        body: req.body.body,
+      },
+      {
+        where: {
+          id: req.params.id,
         },
-            {
-            where: {
-                id: req.params.id,
-            }
-        });         res.status(200).json(postData);
-
-    } catch (err) {
-        res.status(500).json;
-    }
-} );
+      }
+    );
+    res.status(200).json(postData);
+  } catch (err) {
+    res.status(500).json;
+  }
+});
 
 module.exports = router;
