@@ -29,7 +29,7 @@ router.get("/", async (req, res) => {
 });
 
 // get one post to show on its own page with comments
-router.get("/posts/:id", async (req, res) => {
+router.get("/post/:id", async (req, res) => {
   try {
     const postData = await Post.findByPk(req.params.id, {
       include: [
@@ -55,9 +55,8 @@ router.get("/posts/:id", async (req, res) => {
   }
 });
 
-
 router.get("/login", (req, res) => {
-    // if/once user is logged in, redirect user to homepage
+  // if/once user is logged in, redirect user to homepage
   if (req.session.logged_in) {
     res.redirect("/");
     return;
