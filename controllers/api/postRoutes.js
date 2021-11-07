@@ -11,9 +11,6 @@ router.get("/", withAuth, async (req, res) => {
         {
           model: User,
         },
-        {
-          model: Comment,
-        },
       ],
     });
     res.status(200).json(postData);
