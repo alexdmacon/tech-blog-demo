@@ -2,9 +2,10 @@
   "name": "tech-blog-demo",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "server.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
   },
   "repository": {
     "type": "git",
@@ -26,5 +27,6 @@
     "express-session": "^1.17.2",
     "mysql2": "^2.3.3-rc.0",
     "sequelize": "^6.9.0"
-  }
+  },
+  "devDependencies": {}
 }
