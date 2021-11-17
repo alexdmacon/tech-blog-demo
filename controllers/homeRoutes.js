@@ -58,18 +58,6 @@ router.get("/post/:id", async (req, res) => {
 });
 
 
-router.get("/signup", (req, res) => {
-  // if/once user is logged in, redirect user to homepage
-  if (req.session.logged_in) {
-    res.redirect("/");
-    return;
-  }
-  // else send the user to the 'login' page generated w/ handlebars template
-  res.render("signup");
-});
-
-
-
 router.get("/login", (req, res) => {
   // if/once user is logged in, redirect user to homepage
   if (req.session.logged_in) {
@@ -82,27 +70,23 @@ router.get("/login", (req, res) => {
 
 router.get("/dashboard", withAuth, async (req, res) => {
   try {
-    const postData = await Post.findAll({
-      include: [
-        {
-          model: User,
-          attributes: ["name"],
-        },
-        {
-            model: Comment,
-            include: {
-                model: User,
-                attributes: ["name"],
-            }
-        }
-      ],
+    // Find the logged in user based on the session ID
+    const userData = await User.findByPk(req.session.user_id, {
+      attributes: { exclude: ['password'] },
+      include: [{ model: Post }],
     });
 
-    const posts = postData.map((post) => post.get({ plain: true }));
+    console.log(
+      '_______________________________________________________________________________________________________________' +
+        'Logged in as' +
+        req.session.user_id +
+        req.session.logged_in
+    );
+    const user = userData.get({ plain: true });
 
-    res.render("dashboard", {
-      posts,
-      logged_in: req.session.logged_in,
+    res.render('dashboard', {
+      ...user,
+      logged_in: true,
     });
   } catch (err) {
     res.status(500).json(err);
