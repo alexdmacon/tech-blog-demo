@@ -10,12 +10,11 @@
   <body>
     <header> <h1>Alex's Awesome Tech Blog</h1> </header>
     <nav>
-        {{if logged_in}}
+        <a href="/">Home</a>
         <a href="/dashboard">Dashboard</a>
-        <button>Logout</button>
-        {{else}}
+        <a href="/" id="logout">Logout</a>
         <a href="/login">Login</a>
-        {{/if}}
+        <a href="/signup">Sign Up</a>
     </nav>
 
     <main>{{{ body }}}</main>

@@ -1,6 +1,8 @@
 const router = require("express").Router();
 const { Post, Comment, User } = require("../models");
 const withAuth = require("../utils/auth");
+const sequelize = require('../config/connection');
+
 
 // getting posts to show on homepage
 router.get("/", async (req, res) => {
@@ -55,6 +57,19 @@ router.get("/post/:id", async (req, res) => {
   }
 });
 
+
+router.get("/signup", (req, res) => {
+  // if/once user is logged in, redirect user to homepage
+  if (req.session.logged_in) {
+    res.redirect("/");
+    return;
+  }
+  // else send the user to the 'login' page generated w/ handlebars template
+  res.render("signup");
+});
+
+
+
 router.get("/login", (req, res) => {
   // if/once user is logged in, redirect user to homepage
   if (req.session.logged_in) {
@@ -64,5 +79,43 @@ router.get("/login", (req, res) => {
   // else send the user to the 'login' page generated w/ handlebars template
   res.render("login");
 });
+
+router.get("/dashboard", withAuth, async (req, res) => {
+  try {
+    const postData = await Post.findAll({
+      include: [
+        {
+          model: User,
+          attributes: ["name"],
+        },
+        {
+            model: Comment,
+            include: {
+                model: User,
+                attributes: ["name"],
+            }
+        }
+      ],
+    });
+
+    const posts = postData.map((post) => post.get({ plain: true }));
+
+    res.render("dashboard", {
+      posts,
+      logged_in: req.session.logged_in,
+    });
+  } catch (err) {
+    res.status(500).json(err);
+  }
+});
+
+// route to render new post template if user is logged in
+router.get("/new-post", withAuth, (req, res) => {
+  res.render("new-post");
+});
+
+
+module.exports = router;
+
 
 module.exports = router;
